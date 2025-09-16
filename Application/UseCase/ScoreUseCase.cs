@@ -18,6 +18,7 @@ namespace Application.UseCase
         // Caso de uso: Registrar puntaje
         public async Task<ApiResponse<Score>> RegisterScoreAsync(ScoreDto score)
         {
+
             Alias? alias = null;
 
             if (!await _aliasRepository.ValidateByName(score.Alias))
@@ -29,7 +30,7 @@ namespace Application.UseCase
 
             try
             {
-                Session session = Session.Create(score.Alias);
+                Session session = Session.Create(score.Alias, score.StartedAt, score.EndedAt);
 
                 Score createScore = Score.Create(score.Alias, score.Points);
 

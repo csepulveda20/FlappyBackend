@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Adapters
 {
-    internal class SessionAdapter(FlappyDbContext dbContext, IUnitOfWork unitOfWork) : ISessionRepository
+    public class SessionAdapter(FlappyDbContext dbContext, IUnitOfWork unitOfWork) : ISessionRepository
     {
         private readonly FlappyDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));

@@ -10,13 +10,14 @@
 
         private Session() { }
 
-        public static Session Create(string? alias = null, string? metadata = null)
+        public static Session Create(string alias, DateTime startedAt, DateTime endedAt, string? metadata = null)
         {
             return new Session
             {
                 SessionId = Guid.NewGuid(),
                 Alias = alias,
-                StartedAt = DateTime.UtcNow,
+                StartedAt = startedAt,
+                EndedAt = endedAt,
                 Metadata = metadata
             };
         }

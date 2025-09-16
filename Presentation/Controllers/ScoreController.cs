@@ -18,8 +18,8 @@ namespace Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterScore([FromBody] ScoreDto scoreDto)
         {
-            if (string.IsNullOrWhiteSpace(scoreDto.Alias) || scoreDto.Points < 0)
-                return BadRequest("Alias is required and Points must be >= 0.");
+            if (string.IsNullOrWhiteSpace(scoreDto.Alias) || scoreDto.Points < 0 || scoreDto.Alias.Contains(" "))
+                return BadRequest("Alias es requerido, no debe de tener espacio en blanco y los puntos debe ser >= 0.");
 
             var result = await _scoreUseCase.RegisterScoreAsync(scoreDto);
 

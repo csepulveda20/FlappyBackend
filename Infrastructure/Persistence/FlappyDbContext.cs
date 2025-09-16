@@ -24,10 +24,6 @@ namespace FlappyBackend.Infrastructure.Persistence
                 entity.Property(e => e.Metadata).HasMaxLength(400);
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("SYSUTCDATETIME()");
                 entity.HasIndex(e => e.Points).HasDatabaseName("IX_Score_Points_DESC").IsDescending(true);
-                entity.HasIndex(e => new { e.Alias, e.CreatedAt }).HasDatabaseName("IX_Score_Alias_CreatedAt").IsDescending(true);
-                //entity.HasCheckConstraint("CK_Score_Points", "Points >= 0");
-                //entity.HasCheckConstraint("CK_Score_MaxCombo", "MaxCombo IS NULL OR MaxCombo >= 0");
-                //entity.HasCheckConstraint("CK_Score_DurationSec", "DurationSec IS NULL OR DurationSec >= 0");
                 entity.HasOne(x => x.Session)
                       .WithMany()
                       .HasForeignKey(e => e.SessionId)

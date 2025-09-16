@@ -1,4 +1,8 @@
+using Application.Repositories;
+using Application.UseCase;
 using FlappyBackend.Infrastructure.Persistence;
+using Infrastructure.Adapters;
+using Infrastructure.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Presentation.Hubs;
@@ -24,6 +28,14 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSignalR();
 
+builder.Services.AddScoped<IScoreRepository, ScoreAdapter>();
+builder.Services.AddScoped<IAliasRepository, AliasAdapter>();
+builder.Services.AddScoped<ISessionRepository, SessionAdapter>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<ScoreUseCase>();
+builder.Services.AddScoped<AliasUseCase>();
+builder.Services.AddScoped<SessionUseCase>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

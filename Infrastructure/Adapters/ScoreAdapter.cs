@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Adapters
 {
-    internal class ScoreAdapter(FlappyDbContext dbContext, IUnitOfWork unitOfWork) : IScoreRepository
+    public class ScoreAdapter(FlappyDbContext dbContext, IUnitOfWork unitOfWork) : IScoreRepository
     {
         private readonly FlappyDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
