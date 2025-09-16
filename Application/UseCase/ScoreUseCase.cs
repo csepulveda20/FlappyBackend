@@ -5,7 +5,7 @@ using Domain.Entities;
 
 namespace Application.UseCase
 {
-    public class ScoreUseCase(IScoreRepository scoreRepository, IAliasRepository aliasRepository, ISessionRepository sessionRepository) 
+    public class ScoreUseCase(IScoreRepository scoreRepository, IAliasRepository aliasRepository, ISessionRepository sessionRepository, IUnitOfWork unitOfWork) 
     {
         private readonly IScoreRepository _scoreRepository = scoreRepository ?? throw new ArgumentNullException(nameof(scoreRepository));
 
@@ -13,25 +13,48 @@ namespace Application.UseCase
 
         private readonly ISessionRepository _sessionRepository = sessionRepository ?? throw new ArgumentNullException(nameof(sessionRepository));
 
+        private readonly IUnitOfWork _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
         // Caso de uso: Registrar puntaje
         public async Task<ApiResponse<Score>> RegisterScoreAsync(ScoreDto score)
         {
+            Alias? alias = null;
 
-            Alias alias = Alias.Create(score.Alias);
+            if (!await _aliasRepository.ValidateByName(score.Alias))
+            {
+                alias = Alias.Create(score.Alias);
+            }
 
-            Session session = Session.Create(score.Alias);
+            await _unitOfWork.BeginTransaction();
 
-            Score createScore = Score.Create(score.Alias, score.Points);
+            try
+            {
+                Session session = Session.Create(score.Alias);
 
-            createScore.SessionId = session.SessionId;
+                Score createScore = Score.Create(score.Alias, score.Points);
 
-            await _sessionRepository.AddAsync(session);
+                createScore.SessionId = session.SessionId;
 
-            Score entity = await _scoreRepository.AddScoreAsync(createScore);
+                if (alias != null)
+                {
+                    await _aliasRepository.AddAsync(alias);                
+                }
 
-            await _aliasRepository.AddAsync(alias);
+                await _sessionRepository.AddAsync(session);
 
-            return ApiResponse<Score>.Success(entity, "Score registered successfully");
+                Score entity = await _scoreRepository.AddScoreAsync(createScore);
+
+                await _unitOfWork.CommitTransaction();
+                await _unitOfWork.SaveChanges();
+
+                return ApiResponse<Score>.Success(entity, "Score registered successfully");
+            }
+            catch (Exception)
+            {
+                await _unitOfWork.RollbackTransaction();
+
+                return ApiResponse<Score>.Failure("ERROR, Registro de score fallido.");
+            }
         }
 
         // Caso de uso: Obtener Top N puntajes

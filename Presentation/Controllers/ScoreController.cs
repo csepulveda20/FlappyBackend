@@ -9,16 +9,10 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/v1/scores")]
-    public class ScoreController : ControllerBase
+    public class ScoreController(ScoreUseCase scoreUseCase, IHubContext<RankingHub> hubContext) : ControllerBase
     {
-        private readonly ScoreUseCase _scoreUseCase;
-        private readonly IHubContext<RankingHub> _hubContext;
-
-        public ScoreController(ScoreUseCase scoreUseCase, IHubContext<RankingHub> hubContext)
-        {
-            _scoreUseCase = scoreUseCase;
-            _hubContext = hubContext;
-        }
+        private readonly ScoreUseCase _scoreUseCase = scoreUseCase;
+        private readonly IHubContext<RankingHub> _hubContext = hubContext;
 
         // POST /api/v1/scores
         [HttpPost]

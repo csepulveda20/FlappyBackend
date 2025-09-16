@@ -12,17 +12,17 @@ namespace Infrastructure.Adapters
 
         public async Task<Score> AddScoreAsync(Score score)
         {
-            await _unitOfWork.BeginTransaction();
+            //await _unitOfWork.BeginTransaction();
             try
             {
                 var entry = await _dbContext.Scores.AddAsync(score);
-                await _unitOfWork.SaveChanges();
-                await _unitOfWork.CommitTransaction();
+                //await _unitOfWork.SaveChanges();
+                //await _unitOfWork.CommitTransaction();
                 return entry.Entity;
             }
             catch
             {
-                await _unitOfWork.RollbackTransaction();
+                //await _unitOfWork.RollbackTransaction();
                 throw;
             }
         }

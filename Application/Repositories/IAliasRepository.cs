@@ -7,5 +7,7 @@ namespace Application.Repositories
         Task<Alias?> GetByNameAsync(string name);
         Task<Alias> AddAsync(Alias alias);
         Task<IReadOnlyList<Alias>> GetAllAsync();
+
+        Task<bool> ValidateByName(string name);
     }
 }

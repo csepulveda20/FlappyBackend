@@ -17,17 +17,17 @@ namespace Infrastructure.Adapters
 
         public async Task<Alias> AddAsync(Alias alias)
         {
-            await _unitOfWork.BeginTransaction();
+            //await _unitOfWork.BeginTransaction();
             try
             {
                 var entry = await _dbContext.Aliases.AddAsync(alias);
-                await _unitOfWork.SaveChanges();
-                await _unitOfWork.CommitTransaction();
+                //await _unitOfWork.SaveChanges();
+                //await _unitOfWork.CommitTransaction();
                 return entry.Entity;
             }
             catch
             {
-                await _unitOfWork.RollbackTransaction();
+                //await _unitOfWork.RollbackTransaction();
                 throw;
             }
         }
@@ -36,5 +36,8 @@ namespace Infrastructure.Adapters
         {
             return await _dbContext.Aliases.ToListAsync();
         }
+
+        public async Task<bool> ValidateByName(string name) =>
+            await _dbContext.Aliases.AnyAsync(a => a.Name == name);
     }
 }
